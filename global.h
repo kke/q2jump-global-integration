@@ -10,7 +10,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -34,52 +34,52 @@ void Load_Remote_Users_Files();
 void Download_Remote_Maptimes(char *mapname);
 void Load_Remote_Maptimes(char *mapname);
 void Sort_Remote_Maptimes();
-void Download_Remote_Recordings(); // not used (in lieu of the MT version)
-void Download_Remote_Recordings_MT(char *mapname); // multi threaded downloads
-void Download_Remote_Recordings_NB(); // non blocking downloads
+void Download_Remote_Recordings();  // not used (in lieu of the MT version)
+void Download_Remote_Recordings_MT(char *mapname);  // multi threaded downloads
+void Download_Remote_Recordings_NB();               // non blocking downloads
 void Load_Remote_Recordings(int index_from);
-void Print_Sorted_Maptimes(edict_t* ent); // not using for now...
-void Print_Remote_Maptimes(edict_t* ent, char *server);
-void Update_Global_Scores(edict_t *ent, float item_time, char *owner); // not used (in lieu of reloading via files)
+void Print_Sorted_Maptimes(edict_t *ent);  // not using for now...
+void Print_Remote_Maptimes(edict_t *ent, char *server);
+void Update_Global_Scores(
+    edict_t *ent, float item_time,
+    char *owner);  // not used (in lieu of reloading via files)
 void Cmd_Remote_Replay(edict_t *ent, int num);
-void Display_Global_Scoreboard ();
+void Display_Global_Scoreboard();
 void Display_Dual_Scoreboards();
 
 // Structs
-typedef struct
-{
-   int id;
-   int map_completions;
-   int score;
-   char name[64];
+typedef struct {
+    int id;
+    int map_completions;
+    int score;
+    char name[64];
 } remote_user_record;
 
-typedef struct
-{
-	int id;
-	float time;
-	char date[9];
-	int completions;
-	char name[64];	
+typedef struct {
+    int id;
+    float time;
+    char date[9];
+    int completions;
+    char name[64];
 } remote_map_best_times_record;
 
-typedef struct
-{
-	int id;
-	float time;
-	char date[9];
-	int completions;
-	char name[64];
-	char server[256];
-	char replay_host_url[256];
+typedef struct {
+    int id;
+    float time;
+    char date[9];
+    int completions;
+    char name[64];
+    char server[256];
+    char replay_host_url[256];
 } sorted_remote_map_best_times_record;
 
 // For passing args to multithread cURL function
-struct http_get_struct
-{
-	char url[256];
-	char filename[128];
+struct http_get_struct {
+    char url[256];
+    char filename[128];
 };
 
 // Main struct array to store the global scores
-extern sorted_remote_map_best_times_record sorted_remote_map_best_times[(MAX_HIGHSCORES*MAX_REMOTE_HOSTS)+MAX_HIGHSCORES];
+extern sorted_remote_map_best_times_record
+    sorted_remote_map_best_times[(MAX_HIGHSCORES * MAX_REMOTE_HOSTS) +
+                                 MAX_HIGHSCORES];
