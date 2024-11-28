@@ -17,24 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+#include "g_items.h"
+
 #include "g_local.h"
+#include "jumpmod.h"
 
-qboolean Pickup_Weapon(edict_t *ent, edict_t *other);
-void Use_Weapon(edict_t *ent, gitem_t *inv);
-void Drop_Weapon(edict_t *ent, gitem_t *inv);
-
-void Weapon_Blaster(edict_t *ent);
-void Weapon_Shotgun(edict_t *ent);
-void Weapon_SuperShotgun(edict_t *ent);
-void Weapon_Machinegun(edict_t *ent);
-void Weapon_Chaingun(edict_t *ent);
-void Weapon_HyperBlaster(edict_t *ent);
-void Weapon_RocketLauncher(edict_t *ent);
-void Weapon_Grenade(edict_t *ent);
-void Weapon_GrenadeLauncher(edict_t *ent);
-void Weapon_Railgun(edict_t *ent);
-void Weapon_BFG(edict_t *ent);
-void Weapon_Finish(edict_t *ent);
 
 gitem_armor_t jacketarmor_info = {25, 50, .30, .00, ARMOR_JACKET};
 gitem_armor_t combatarmor_info = {50, 100, .60, .30, ARMOR_COMBAT};
@@ -49,8 +36,6 @@ static int power_shield_index;
 #define HEALTH_IGNORE_MAX 1
 #define HEALTH_TIMED 2
 
-qboolean Pickup_Quad(edict_t *ent, edict_t *other);
-void Use_Quad(edict_t *ent, gitem_t *item);
 static int quad_drop_timeout_hack;
 
 //======================================================================
@@ -60,7 +45,7 @@ void Use_Jet(edict_t *ent, gitem_t *item) {
     ValidateSelectedItem(ent);
 
     /*jetpack in inventory but no fuel time? must be one of the
-        give all/give jetpack cheats, so put fuel in*/
+      give all/give jetpack cheats, so put fuel in*/
     if (ent->client->Jet_remaining == 0) ent->client->Jet_remaining = 600;
 
     if (Jet_Active(ent))
@@ -73,7 +58,7 @@ void Use_Jet(edict_t *ent, gitem_t *item) {
              0);
 
     /*this is the sound played when flying. To here this sound
-        immediately we play it here the first time*/
+      immediately we play it here the first time*/
     gi.sound(ent, CHAN_AUTO, gi.soundindex("hover/hovidle1.wav"), 0.1,
              ATTN_NORM, 0);
 }
@@ -147,12 +132,14 @@ void DoRespawn(edict_t *ent) {
         else {
             // ZOID
 
-            for (count = 0, ent = master; ent; ent = ent->chain, count++);
+            for (count = 0, ent = master; ent; ent = ent->chain, count++)
+                ;
 
             choice = rand() % count;
 
             for (count = 0, ent = master; count < choice;
-                 ent = ent->chain, count++);
+                 ent = ent->chain, count++)
+                ;
         }
     }
 
@@ -1558,8 +1545,8 @@ gitem_t itemlist[] = {
     //
 
     /* weapon_grapple (.3 .3 1) (-16 -16 -16) (16 16 16)
-always owned, never in the world
-*/
+    always owned, never in the world
+    */
     {"weapon_grapple", NULL, Use_Weapon, NULL, CTFWeapon_Grapple,
      "misc/w_pkup.wav", NULL, 0, "models/weapons/grapple/tris.md2",
      /* icon */ "net",
@@ -1570,8 +1557,8 @@ always owned, never in the world
      "weapons/grapple/grhit.wav"},
 
     /* weapon_blaster (.3 .3 1) (-16 -16 -16) (16 16 16)
-always owned, never in the world
-*/
+    always owned, never in the world
+    */
     {"weapon_blaster", NULL, Use_Weapon, NULL, Weapon_Blaster,
      "misc/w_pkup.wav", NULL, 0, "models/weapons/v_blast/tris.md2",
      /* icon */ "w_blaster",
@@ -1833,8 +1820,8 @@ always owned, never in the world
      /* precache */ "items/airout.wav"},
 
     /*QUAKED item_ancient_head (.3 .3 1) (-16 -16 -16) (16 16 16)
-Special item that gives +2 to maximum health
-*/
+    Special item that gives +2 to maximum health
+    */
     {"item_ancient_head", NULL, NULL, NULL, NULL, "items/pkup.wav",
      "models/items/c_head/tris.md2", EF_ROTATE, NULL,
      /* icon */ "i_fixme",
@@ -1843,8 +1830,8 @@ Special item that gives +2 to maximum health
      /* precache */ ""},
 
     /*QUAKED item_adrenaline (.3 .3 1) (-16 -16 -16) (16 16 16)
-gives +1 to maximum health
-*/
+    gives +1 to maximum health
+    */
     {"item_adrenaline", Pickup_Adrenaline, NULL, NULL, NULL, "items/pkup.wav",
      "models/items/adrenal/tris.md2", EF_ROTATE, NULL,
      /* icon */ "p_adrenaline",
@@ -1874,64 +1861,64 @@ gives +1 to maximum health
     // KEYS
     //
     /*QUAKED key_data_cd (0 .5 .8) (-16 -16 -16) (16 16 16)
-key for computer centers
-*/
+    key for computer centers
+    */
     {"key_data_cd", Pickup_Key, NULL, Drop_General, NULL, NULL,
      "models/items/keys/data_cd/tris.md2", EF_ROTATE, NULL, "k_datacd",
      "Data CD", 2, 0, NULL, IT_STAY_COOP | IT_KEY, 0, NULL, 0,
      /* precache */ ""},
 
     /*QUAKED key_power_cube (0 .5 .8) (-16 -16 -16) (16 16 16) TRIGGER_SPAWN
-NO_TOUCH warehouse circuits
-*/
+    NO_TOUCH warehouse circuits
+    */
     {"key_power_cube", Pickup_Key, NULL, Drop_General, NULL, NULL,
      "models/items/keys/power/tris.md2", EF_ROTATE, NULL, "k_powercube",
      "Power Cube", 2, 0, NULL, IT_STAY_COOP | IT_KEY, 0, NULL, 0,
      /* precache */ ""},
 
     /*QUAKED key_pyramid (0 .5 .8) (-16 -16 -16) (16 16 16)
-key for the entrance of jail3
-*/
+    key for the entrance of jail3
+    */
     {"key_pyramid", Pickup_Key, NULL, Drop_General, NULL, NULL,
      "models/items/keys/pyramid/tris.md2", EF_ROTATE, NULL, "k_pyramid",
      "Pyramid Key", 2, 0, NULL, IT_STAY_COOP | IT_KEY, 0, NULL, 0,
      /* precache */ ""},
 
     /*QUAKED key_data_spinner (0 .5 .8) (-16 -16 -16) (16 16 16)
-key for the city computer
-*/
+    key for the city computer
+    */
     {"key_data_spinner", Pickup_Key, NULL, Drop_General, NULL, NULL,
      "models/items/keys/spinner/tris.md2", EF_ROTATE, NULL, "k_dataspin",
      "Data Spinner", 2, 0, NULL, IT_STAY_COOP | IT_KEY, 0, NULL, 0,
      /* precache */ ""},
 
     /*QUAKED key_pass (0 .5 .8) (-16 -16 -16) (16 16 16)
-security pass for the security level
-*/
+    security pass for the security level
+    */
     {"key_pass", Pickup_Key, NULL, Drop_General, NULL, NULL,
      "models/items/keys/pass/tris.md2", EF_ROTATE, NULL, "k_security",
      "Security Pass", 2, 0, NULL, IT_STAY_COOP | IT_KEY, 0, NULL, 0,
      /* precache */ ""},
 
     /*QUAKED key_blue_key (0 .5 .8) (-16 -16 -16) (16 16 16)
-normal door key - blue
-*/
+    normal door key - blue
+    */
     {"key_blue_key", Pickup_Key, NULL, Drop_General, NULL, NULL,
      "models/items/keys/key/tris.md2", EF_ROTATE, NULL, "k_bluekey", "Blue Key",
      2, 0, NULL, IT_STAY_COOP | IT_KEY, 0, NULL, 0,
      /* precache */ ""},
 
     /*QUAKED key_red_key (0 .5 .8) (-16 -16 -16) (16 16 16)
-normal door key - red
-*/
+    normal door key - red
+    */
     {"key_red_key", Pickup_Key, NULL, Drop_General, NULL, NULL,
      "models/items/keys/red_key/tris.md2", EF_ROTATE, NULL, "k_redkey",
      "Red Key", 2, 0, NULL, IT_STAY_COOP | IT_KEY, 0, NULL, 0,
      /* precache */ ""},
 
     /*QUAKED key_commander_head (0 .5 .8) (-16 -16 -16) (16 16 16)
-tank commander's head
-*/
+    tank commander's head
+    */
     {"key_commander_head", Pickup_Key, NULL, Drop_General, NULL,
      "items/pkup.wav", "models/monsters/commandr/head/tris.md2", EF_GIB, NULL,
      /* icon */ "k_comhead",
@@ -1940,8 +1927,8 @@ tank commander's head
      /* precache */ ""},
 
     /*QUAKED key_airstrike_target (0 .5 .8) (-16 -16 -16) (16 16 16)
-tank commander's head
-*/
+    tank commander's head
+    */
     {"key_airstrike_target", Pickup_Key, NULL, Drop_General, NULL, NULL,
      "models/items/keys/target/tris.md2", EF_ROTATE, NULL,
      /* icon */ "i_airstrike",
@@ -1950,24 +1937,24 @@ tank commander's head
      /* precache */ ""},
 
     /*QUAKED weapon_clear (.5 .5 .5) ?
-removes all weapons from a player's inventory
-*/
+    removes all weapons from a player's inventory
+    */
     {"weapon_clear", Pickup_Key, NULL, Drop_General, NULL, NULL,
      "models/items/keys/red_key/tris.md2", EF_GIB, NULL, "k_redkey",
      "weapon clear", 2, 0, NULL, IT_STAY_COOP | IT_KEY, 0, NULL, 0,
      /* precache */ ""},
 
     /*QUAKED start_line (.5 .5 .5) ?
-resets timer and removes cps
-*/
+    resets timer and removes cps
+    */
     {"start_line", Pickup_Key, NULL, Drop_General, NULL, NULL,
      "models/items/keys/red_key/tris.md2", EF_GIB, NULL, "k_redkey",
      "start line", 2, 0, NULL, IT_STAY_COOP | IT_KEY, 0, NULL, 0,
      /* precache */ ""},
 
     /*QUAKED cp_clear (.5 .5 .5) ?
-can clear checkpoints in a player's inventory
-*/
+    can clear checkpoints in a player's inventory
+    */
     {"cp_clear", Pickup_Key, NULL, Drop_General, NULL, NULL,
      "models/items/keys/red_key/tris.md2", EF_GIB, NULL, "k_redkey", "cp clear",
      2, 0, NULL, IT_STAY_COOP | IT_KEY, 0, NULL, 0,
@@ -3059,10 +3046,10 @@ void SP_one_way_wall(edict_t *self) {
 
 /*void SP_misc_ball (edict_t *ent)
 {
-  ent->classname = "misc_ball";
-  ent->movetype = MOVETYPE_NONE;
-  ent->solid = SOLID_NOT;
+        ent->classname = "misc_ball";
+        ent->movetype = MOVETYPE_NONE;
+        ent->solid = SOLID_NOT;
 
-  spawn_ball(ent);
-  gi.linkentity(ent);
+        spawn_ball(ent);
+        gi.linkentity(ent);
 }*/

@@ -16,9 +16,25 @@ GAME_OBJS = \
     zb_util.o m_insane.o m_infantry.o m_gunner.o m_flipper.o m_berserk.o \
     m_boss3.o m_mutant.o m_soldier.o g_wireplay.o global.o
 
+UNAME_S := $(shell uname -s)
+
+# Set library extension and other platform-specific options
+ifeq ($(UNAME_S), Linux)
+    LIB_SUFFIX = so
+    OS = linux
+else ifeq ($(UNAME_S), Darwin)
+    LIB_SUFFIX = dylib
+    OS = darwin
+else ifeq ($(OS), Windows_NT)
+    LIB_SUFFIX = dll
+    OS = windows
+else
+    $(error Unsupported platform)
+endif
+
 # Shared library name
 ARCH = $(shell uname -m | sed -e s/i.86/i386/ -e s/amd64/x86_64/ -e s/sun4u/sparc64/ -e s/arm.*/arm/ -e s/sa110/arm/ -e s/alpha/axp/)
-SHARED_LIB = game$(ARCH).so
+SHARED_LIB = game$(ARCH).$(LIB_SUFFIX)
 
 # Debug build settings
 DEBUG_DIR = debug

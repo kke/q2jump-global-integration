@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 #include "g_local.h"
+#include "g_items.h"
 
 
 void InitTrigger (edict_t *self)
@@ -45,7 +46,7 @@ void multi_wait (edict_t *ent)
 void multi_trigger (edict_t *ent)
 {
 	if (ent->nextthink)
-		return;		// already been triggered
+	return;		// already been triggered
 
 	G_UseTargets (ent, ent->activator);
 
@@ -74,19 +75,19 @@ void Touch_Multi (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *su
 	if(other->client)
 	{
 		if (self->spawnflags & 2)
-			return;
+		return;
 	}
 	else if (other->svflags & SVF_MONSTER)
 	{
 		if (!(self->spawnflags & 1))
-			return;
+		return;
 	}
 	else
-		return;
+	return;
 
 	// give a trigger_multiple a count of 1-9, and it will be an individual welcome trigger
 	if (other->client->resp.welcome_count[self->count] > 0)
-		return;
+	return;
 	if (self->count)
 		other->client->resp.welcome_count[self->count] = self->count;
 
@@ -96,7 +97,7 @@ void Touch_Multi (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *su
 
 		AngleVectors(other->s.angles, forward, NULL, NULL);
 		if (_DotProduct(forward, self->movedir) < 0)
-			return;
+		return;
 	}
 
 	self->activator = other;
@@ -127,11 +128,11 @@ void SP_trigger_multiple (edict_t *ent)
 {
 	if (ent->sounds == 1)
 		ent->noise_index = gi.soundindex ("misc/secret.wav");
-	else if (ent->sounds == 2)
+		else if (ent->sounds == 2)
 		ent->noise_index = gi.soundindex ("misc/talk.wav");
-	else if (ent->sounds == 3)
+		else if (ent->sounds == 3)
 		ent->noise_index = gi.soundindex ("misc/trigger1.wav");
-	
+
 	if (!ent->wait)
 		ent->wait = 0.2;
 	ent->touch = Touch_Multi;
@@ -167,7 +168,7 @@ void lapcounter_touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t
 {
 	// not a client
 	if (!other->client)
-		return;
+	return;
 
 	// check for 0 count
 	if (self->count < 0) {
@@ -212,7 +213,7 @@ void lapcounter_touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t
 	float	 dot;
 	vec3_t	 forward;
 
-	
+
 	// normalize vector, get angle of the wall, get dot product
 	vectorcopy(other->velocity, vel);
 	vectornormalize(vel);
@@ -333,20 +334,20 @@ resizable ent that acts as a checkpoint for maps with a lapcounter
 */
 void lapcp_touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf) {	
 	if (!other->client)
-		return;
+	return;
 
 	// check for bad count values
 	if (self->count >= sizeof(other->client->pers.lap_cp) / sizeof(int)) {
 		if (trigger_timer(5))
 			gi.cprintf(other, PRINT_HIGH, 
-				"Mapper Error: Your count of %i is higher than the max value of %i.\n", 
-				self->count, sizeof(other->client->pers.lap_cp) / sizeof(int) - 1);
+	      "Mapper Error: Your count of %i is higher than the max value of %i.\n", 
+	      self->count, sizeof(other->client->pers.lap_cp) / sizeof(int) - 1);
 		return;
 	}
 
 	// check if the client is already finished
 	if (other->client->resp.finished == 1 && !other->client->resp.replaying)
-		return;
+	return;
 
 	// check if they have it already, increase it if they don't
 	if (other->client->pers.lap_cp[self->count] != 1) {
@@ -376,7 +377,7 @@ void quad_touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf
 
 	// client check
 	if (!other->client)
-		return;
+	return;
 
 	// already have it, tell them so if:
 	// -not spawnflag 1
@@ -415,7 +416,7 @@ void quad_clear_touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t
 
 	// client check
 	if (!other->client)
-		return;
+	return;
 
 	// tell them they no longer have quad if:
 	// -not spawnflag 1
@@ -500,21 +501,21 @@ void trigger_key_use (edict_t *self, edict_t *other, edict_t *activator)
 	int			index;
 
 	if (!self->item)
-		return;
+	return;
 	if (!activator->client)
-		return;
+	return;
 
 	index = ITEM_INDEX(self->item);
 	if (!activator->client->pers.inventory[index])
 	{
 		if (level.time < self->touch_debounce_time)
-			return;
+		return;
 		self->touch_debounce_time = level.time + 5.0;
 		if (!mset_vars->cmsg)
-		if (!activator->client->resp.cmsg)
-		{
-			gi.centerprintf (activator, "You need the %s", self->item->pickup_name);
-			gi.sound (activator, CHAN_AUTO, gi.soundindex ("misc/keytry.wav"), 1, ATTN_NORM, 0);
+			if (!activator->client->resp.cmsg)
+			{
+				gi.centerprintf (activator, "You need the %s", self->item->pickup_name);
+				gi.sound (activator, CHAN_AUTO, gi.soundindex ("misc/keytry.wav"), 1, ATTN_NORM, 0);
 		}
 		return;
 	}
@@ -531,14 +532,14 @@ void trigger_key_use (edict_t *self, edict_t *other, edict_t *activator)
 
 			for (cube = 0; cube < 8; cube++)
 				if (activator->client->pers.power_cubes & (1 << cube))
-					break;
+			break;
 			for (player = 1; player <= game.maxclients; player++)
 			{
 				ent = &g_edicts[player];
 				if (!ent->inuse)
-					continue;
+				continue;
 				if (!ent->client)
-					continue;
+				continue;
 				if (ent->client->pers.power_cubes & (1 << cube))
 				{
 					ent->client->pers.inventory[index]--;
@@ -552,9 +553,9 @@ void trigger_key_use (edict_t *self, edict_t *other, edict_t *activator)
 			{
 				ent = &g_edicts[player];
 				if (!ent->inuse)
-					continue;
+				continue;
 				if (!ent->client)
-					continue;
+				continue;
 				ent->client->pers.inventory[index] = 0;
 			}
 		}
@@ -616,32 +617,32 @@ After the counter has been triggered "count" times (default 2), it will fire all
 void trigger_counter_use(edict_t *self, edict_t *other, edict_t *activator)
 {
 	if (self->count == 0)
-		return;
-	
+	return;
+
 	self->count--;
 
 	if (self->count)
 	{
 		if (! (self->spawnflags & 1))
 		{
-		if (!mset_vars->cmsg)
-		if (!activator->client->resp.cmsg)
-		{
-			gi.centerprintf(activator, "%i more to go...", self->count);
-			gi.sound (activator, CHAN_AUTO, gi.soundindex ("misc/talk1.wav"), 1, ATTN_NORM, 0);
-		}
+			if (!mset_vars->cmsg)
+				if (!activator->client->resp.cmsg)
+				{
+					gi.centerprintf(activator, "%i more to go...", self->count);
+					gi.sound (activator, CHAN_AUTO, gi.soundindex ("misc/talk1.wav"), 1, ATTN_NORM, 0);
+			}
 		}
 		return;
 	}
-	
+
 	if (! (self->spawnflags & 1))
 	{
-	if (!mset_vars->cmsg)
-	if (other->client && !other->client->resp.cmsg)
-	{
-		gi.centerprintf(activator, "Sequence completed!");
-		gi.sound (activator, CHAN_AUTO, gi.soundindex ("misc/talk1.wav"), 1, ATTN_NORM, 0);
-	}
+		if (!mset_vars->cmsg)
+			if (other->client && !other->client->resp.cmsg)
+			{
+				gi.centerprintf(activator, "Sequence completed!");
+				gi.sound (activator, CHAN_AUTO, gi.soundindex ("misc/talk1.wav"), 1, ATTN_NORM, 0);
+		}
 	}
 	self->activator = activator;
 	multi_trigger (self);
@@ -693,37 +694,38 @@ static int windsound;
 void trigger_push_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
 	if(self->target) {
-        if (strncmp(self->target, "checkpoint", strlen("checkpoint")) == 0 && strcmp(other->classname, "player") == 0) {
+		// target starts with "checkpoint" and classname equals "player"
+		if (strstr(self->target, "checkpoint") == self->target && !strcmp(other->classname, "player")) {
 			if (other->client->resp.store[0].checkpoints >= self->count)
 				return;
-			else {
+				else {
 				if (trigger_timer(5))
 					gi.cprintf(other,PRINT_HIGH,"You need %d checkpoint(s) to pass this barrier.\n", self->count);
 			}
-        }
-    }
-    
-    if (strcmp(other->classname, "grenade") == 0)
-    {
-	    VectorScale (self->movedir, self->speed * 10, other->velocity);
-    }
-    else if (other->health > 0)
-    {
-	    VectorScale (self->movedir, self->speed * 10, other->velocity);
+		}
+	}
 
-	    if (other->client)
-	    {
-		    // don't take falling damage immediately from this
-		    VectorCopy (other->velocity, other->client->oldvelocity);
-		    if (other->fly_sound_debounce_time < level.time)
-		    {
-			    other->fly_sound_debounce_time = level.time + 1.5;
-			    gi.sound (other, CHAN_AUTO, windsound, 1, ATTN_NORM, 0);
-		    }
-	    }
-    }
-    if (self->spawnflags & PUSH_ONCE)
-	    G_FreeEdict (self);
+	if (strcmp(other->classname, "grenade") == 0)
+	{
+		VectorScale (self->movedir, self->speed * 10, other->velocity);
+	}
+	else if (other->health > 0)
+	{
+		VectorScale (self->movedir, self->speed * 10, other->velocity);
+
+		if (other->client)
+		{
+			// don't take falling damage immediately from this
+			VectorCopy (other->velocity, other->client->oldvelocity);
+			if (other->fly_sound_debounce_time < level.time)
+			{
+				other->fly_sound_debounce_time = level.time + 1.5;
+				gi.sound (other, CHAN_AUTO, windsound, 1, ATTN_NORM, 0);
+			}
+		}
+	}
+	if (self->spawnflags & PUSH_ONCE)
+		G_FreeEdict (self);
 }
 
 
@@ -768,7 +770,7 @@ void hurt_use (edict_t *self, edict_t *other, edict_t *activator)
 {
 	if (self->solid == SOLID_NOT)
 		self->solid = SOLID_TRIGGER;
-	else
+		else
 		self->solid = SOLID_NOT;
 	gi.linkentity (self);
 
@@ -783,14 +785,14 @@ void hurt_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *sur
 	gitem_t		*item;    
 
 	if (!other->takedamage)
-		return;
+	return;
 
 	if (self->timestamp > level.time)
-		return;
+	return;
 
 	if (self->spawnflags & 16)
 		self->timestamp = level.time + 1;
-	else
+		else
 		self->timestamp = level.time + FRAMETIME;
 
 	if (!(self->spawnflags & 4))
@@ -801,8 +803,8 @@ void hurt_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *sur
 
 	if (self->spawnflags & 8)
 		dflags = DAMAGE_NO_PROTECTION;
-	else
-		dflags = 0;
+		else
+	dflags = 0;
 	if (self->dmg==1 && other->client)
 	{
 		item = FindItem("Rocket Launcher");
@@ -817,7 +819,7 @@ void hurt_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *sur
 
 void SP_trigger_hurt (edict_t *self)
 {
-    
+
 	InitTrigger (self);
 
 	self->noise_index = gi.soundindex ("world/electro.wav");
@@ -825,11 +827,11 @@ void SP_trigger_hurt (edict_t *self)
 
 	// give it a negative dmg value to add health to a player
 	if (!self->dmg)
-		self->dmg = 5;
+	self->dmg = 5;
 
 	if (self->spawnflags & 1)
 		self->solid = SOLID_NOT;
-	else
+		else
 		self->solid = SOLID_TRIGGER;
 
 	if (self->spawnflags & 2)
@@ -861,7 +863,7 @@ void trigger_gravity_touch (edict_t *self, edict_t *other, cplane_t *plane, csur
 		other->gravity = self->gravity;
 		if (other->client && 1 == other->client->resp.debug)
 			gi.cprintf (other, PRINT_HIGH, "spawnflags 1. gravity: %f gravity2: %f total gravity: %f.\n",
-			other->gravity, other->gravity2, other->gravity * other->gravity2 * mset_vars->gravity);
+	       other->gravity, other->gravity2, other->gravity * other->gravity2 * mset_vars->gravity);
 	}
 	if (self->spawnflags & 2)
 	{
@@ -869,13 +871,13 @@ void trigger_gravity_touch (edict_t *self, edict_t *other, cplane_t *plane, csur
 		other->gravity2 = self->gravity;
 		if (other->client && 1 == other->client->resp.debug)
 			gi.cprintf (other, PRINT_HIGH, "spawnflags 2. gravity: %f gravity2: %f total gravity: %f.\n",
-			other->gravity, other->gravity2, other->gravity * other->gravity2 * mset_vars->gravity);
+	       other->gravity, other->gravity2, other->gravity * other->gravity2 * mset_vars->gravity);
 	}
 }
 
 void SP_trigger_gravity (edict_t *self)
 {
-/*	if (st.gravity == 0)
+	/*	if (st.gravity == 0)
 	{
 		gi.dprintf("trigger_gravity without gravity set at %s\n", vtos(self->s.origin));
 		G_FreeEdict  (self);
@@ -905,19 +907,19 @@ Walking monsters that touch this will jump in the direction of the trigger's ang
 void trigger_monsterjump_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
 	if (other->flags & (FL_FLY | FL_SWIM) )
-		return;
+	return;
 	if (other->svflags & SVF_DEADMONSTER)
-		return;
+	return;
 	if ( !(other->svflags & SVF_MONSTER))
-		return;
+	return;
 
-// set XY even if not on ground, so the jump will clear lips
+	// set XY even if not on ground, so the jump will clear lips
 	other->velocity[0] = self->movedir[0] * self->speed;
 	other->velocity[1] = self->movedir[1] * self->speed;
-	
+
 	if (!other->groundentity)
-		return;
-	
+	return;
+
 	other->groundentity = NULL;
 	other->velocity[2] = self->movedir[2];
 }
@@ -935,6 +937,11 @@ void SP_trigger_monsterjump (edict_t *self)
 	self->movedir[2] = st.height;
 }
 
+void Wrapped_Pickup_Weapon(edict_t *ent, edict_t *other, cplane_t *_plane, csurface_t *_surf)
+{
+	qboolean _unused = Pickup_Weapon(ent, other);
+}
+
 // Trigger that works with Pickup_Weapon.
 // Used as a finish (railgun by default)
 // Add a <message> value with a classname of a weapon in the editor to change it to some other weapon.
@@ -944,7 +951,7 @@ void SP_trigger_monsterjump (edict_t *self)
 void SP_trigger_finish(edict_t *ent)
 {
 	gitem_t *wep;
-	
+
 	//if no message, set it to act like a railgun.
 	if (!ent->message) {
 		wep = FindItemByClassname("weapon_railgun");
@@ -962,7 +969,7 @@ void SP_trigger_finish(edict_t *ent)
 	ent->solid = SOLID_TRIGGER;
 	ent->item = wep;
 	//ent->item->pickup_name = wep->pickup_name;
-	ent->touch = Pickup_Weapon;
+	ent->touch = Wrapped_Pickup_Weapon;
 	gi.setmodel(ent, ent->model);
 	gi.linkentity(ent);
 }

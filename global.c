@@ -253,13 +253,12 @@ static void *HTTP_Get_File_MT(void *arguments) {
 }
 
 /*
-        ==============================
-        Download_Remote_Recordings_NB()
+==============================
+Download_Remote_Recordings_NB()
 
-        Non-Blocking version using curl-multi single threaded with concurrent
-   processing Working on x86_64 Linux, but not working on ARM64 - So using
-   multi-threaded (MT) version for now...
-        ==============================
+Non-Blocking version using curl-multi single threaded with concurrent processing
+Working on x86_64 Linux, but not working on ARM64 - So using multi-threaded (MT)
+version for now...
 */
 void Download_Remote_Recordings_NB() {
     // validations
@@ -340,12 +339,11 @@ void Download_Remote_Recordings_NB() {
 }
 
 /*
-        ==============================
-        Download_Remote_Recordings_MT
+Download_Remote_Recordings_MT
 
-        Download the required "mapname_uid.dj3" files using multi-threads
-        Called on each map load (via g_spawn.c)
-        ==============================
+Download the required "mapname_uid.dj3" files using multi-threads
+Called on each map load (via g_spawn.c)
+==============================
 */
 void Download_Remote_Recordings_MT(char *mapname) {
     // validations

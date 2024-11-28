@@ -23,8 +23,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #pragma once
 
 #include "g_local.h"
+#include "jumpmod.h"
 
 // Functions
+void Purge_Remote_Recordings();
 FILE *Open_File_RB_WB(char *filename);
 size_t Write_Data(void *ptr, size_t size, size_t nmemb, FILE *stream);
 void HTTP_Get_File(char *url, char *local_filename, int timeout);
