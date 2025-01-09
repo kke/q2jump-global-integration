@@ -1,0 +1,112 @@
+# Compiled object files
+*.o
+*.obj
+
+# Compiled static libraries
+*.a
+*.lib
+
+# Compiled dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Executable files
+*.out
+*.exe
+
+# Debug and profiling files
+*.dSYM/
+*.prof
+*.gcda
+*.gcno
+*.gcov
+*.gmon.out
+
+# Dependency resolution files
+*.d
+
+# Build directories
+/build/
+/bin/
+/lib/
+/release/
+
+
+# CMake build and output directories
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# Auto-generated files by Make
+*.dep
+*.d
+
+# IDE and editor specific files
+# Vim
+*.swp
+*.swo
+*.vim
+
+# Emacs
+*~
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Xcode
+*.xcodeproj
+*.xcworkspace
+
+# CLion
+.idea/
+cmake-build-*/
+
+# Eclipse
+.project
+.cproject
+.settings/
+
+# Code::Blocks
+*.layout
+*.cbp
+*.depend
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+*.old
+
+# Core dumps and crash logs
+core
+core.*
+
+# Other
+tags
+*.tag
+
+# Generated files from autoconf
+*.in
+*.m4
+aclocal.m4
+autom4te.cache/
+config.h
+config.h.in
+configure
+depcomp
+install-sh
+missing
